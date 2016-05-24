@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>A Serverless Future? - Lambda Functions in the Cloud</title>
+
+  <meta name="description" content="A Presentation on the importance of establishing trust with clients">
+  <meta name="author" content="Nazar Aziz">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/night.css" id="theme">
+
+  <!-- Code syntax highlighting -->
+  <link rel="stylesheet" href="lib/css/zenburn.css">
+
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+    document.getElementsByTagName('head')[0].appendChild(link);
+  </script>
+
+</head>
+
+<body>
+
+<div class="reveal">
+
+  <!-- Any section element inside of this container is displayed as a slide -->
+  <div class="slides">
+
+    <section>
+      <h1>A Serverless Future?</h1>
+      <h2>Lambda Functions in the Cloud</h2>
+
+      <aside class="notes">
+        A brief presentation on AWS Lambda functions and AWS API Gateway
+      </aside>
+    </section>
+
+    <section>
+      <h2>Presentation Source</h2>
+
+      <p>https://github.com/nazar/talk-serverless</p>
+
+      <aside class="notes">
+        <p> DO: paste</p>
+        <p><strong>https://github.com/nazar/talk-serverless</strong></p>
+        <p>to #general</p>
+      </aside>
+    </section>
+
+    <section>
+      <h2><a href="http://docs.aws.amazon.com/lambda/latest/dg/welcome.html">AWS Lambda?</a></h2>
+
+      <blockquote class="fragment">
+        AWS Lambda is a compute service where you can upload your code to AWS Lambda and the
+        service can run the code on your behalf using AWS infrastructure.
+      </blockquote>
+
+      <blockquote class="fragment">
+        AWS Lambda executes your code only when needed and scales automatically, from a few requests per day to
+        thousands per second
+      </blockquote>
+
+      <blockquote class="fragment">
+        A Lambda function consists of code you provide, associated dependencies, and configuration.
+      </blockquote>
+
+      <blockquote class="fragment">
+        A Lambda function cannot direct depend on another Lambda Function - i.e. share code.
+      </blockquote>
+
+      <aside class="notes">
+        <ul>
+          <li>what are lambda functions?</li>
+          <li>choice quotes from Amazon</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section data-background-image="assets/img/overview.jpg" data-background-size="contain">
+    </section>
+
+    <section>
+      <h3><a href="http://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html">Supported Runtimes</a>
+      </h3>
+      <ul>
+        <li>Node - v0.10.36, v4.3.2 - v0.10 phased out 10/2016</li>
+        <li>Java 8</li>
+        <li>Python 2.7</li>
+        <li>More?</li>
+      </ul>
+
+      <aside class="notes">
+        It might be possible to use additional run-times - more on this later
+      </aside>
+    </section>
+
+    <section>
+      <h2>Platform</h2>
+      <ul>
+        <li>AMI - amzn-ami-hvm-2015.09.1.x86_64-gp2</li>
+        <li>Linux - 4.1.19-24.31.amzn1.x86_64</li>
+        <li>Node - ImageMagick &amp; AWS SDK for JavaScript</li>
+        <li>Python - Boto 3 v 1.3.1</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2><a href="https://aws.amazon.com/lambda/pricing/">Pricing</a></h2>
+      <ul>
+        <li>First 1 million requests per month are free</li>
+        <li>$0.20 per 1 million requests thereafter ($0.0000002 per request)</li>
+        <li>Dependant on per Lambda Function memory allocation</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2><a href="http://docs.aws.amazon.com/lambda/latest/dg/nodejs-prog-model-handler.html">Node Programming
+        Model</a></h2>
+          <pre><code class="hljs javascript" data-noescape>
+            exports.myHandler = function(event, context, callback) {
+              console.log("value1 = " + event.key1);
+              console.log("value2 = " + event.key2);
+              callback(null, "some success message");
+              // or
+              // callback("some error type");
+            }
+          </code></pre>
+    </section>
+
+    <section>
+      <h2>Managing &amp; Creating Lambda Functions</h2>
+      <aside class="notes">
+        Manaing Lambda function using the AWS Console
+      </aside>
+    </section>
+
+    <section data-background-image="assets/img/lambda-list.png" data-background-size="contain">
+    </section>
+
+    <section data-background-image="assets/img/lambda-create.png" data-background-size="contain">
+    </section>
+
+    <section data-background-image="assets/img/lambda-create-2.png" data-background-size="contain">
+      <aside class="notes">
+        Example scafold node function
+      </aside>
+    </section>
+
+    <section data-background-image="assets/img/lambda-create-zip.png" data-background-size="contain">
+      <aside class="notes">
+        or upload your own zip file with function + node_modules
+      </aside>
+    </section>
+
+    <section>
+      <h2>Managing &amp; Creating Gateways</h2>
+    </section>
+
+    <section data-background-image="assets/img/gateway-list.png" data-background-size="contain">
+    </section>
+
+    <section data-background-image="assets/img/gateway-create.png" data-background-size="contain">
+      <aside class="notes">
+        API Gateway endpoints can also be defined using Swagger
+      </aside>
+    </section>
+
+    <section data-background-image="assets/img/gateway-create-2.png" data-background-size="contain">
+      <aside class="notes">
+        Creating endpoints
+      </aside>
+    </section>
+
+    <section data-background-image="assets/img/gateway-detail.png" data-background-size="contain">
+      <aside class="notes">
+        <p>Example GET endpoint with Request, request/response integration and response</p>
+        <p>header, parameters/query strings need to be configured as do response types</p>
+      </aside>
+    </section>
+
+    <section>
+      <h2>Problems?</h2>
+      <ul>
+        <li class="fragment">Container Explosion</li>
+        <li class="fragment">Not repeatable</li>
+        <li class="fragment">Not revisionable</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Frameworks</h2>
+      <h3>to the rescue</h3>
+
+      <ul class="fragment">
+        <li><a href="http://docs.serverless.com/v0.5.0/docs">Serverless</a></li>
+        <li><a href="http://apex.run/">APEX</a></li>
+        <li><a href="https://github.com/anaibol/awesome-serverless#frameworks">Others...</a></li>
+      </ul>
+
+      <aside class="notes">
+        <p>Concentrating on two main frameworks.</p>
+      </aside>
+    </section>
+
+    <section>
+      <h2><a href="http://docs.serverless.com/v0.5.0/docs">Serverless</a></h2>
+      <blockquote>
+        is an application framework for building serverless web, mobile and IoT applications exclusively on AWS Lambda.
+        A Serverless app can simply be a couple of lambda functions to accomplish some tasks, or an entire back-end
+        comprised of hundreds of lambda functions.
+      </blockquote>
+      <blockquote>
+        comes in the form of a Node.js command line interface
+      </blockquote>
+      <blockquote>
+        currently supports nodejs and python2.7 runtimes
+      </blockquote>
+      <blockquote>
+        we work full time on this and are funded by a top tier VC firm in Silicon Valley
+      </blockquote>
+
+      <aside class="notes">
+        Quick summary on Serverless
+      </aside>
+    </section>
+
+    <section>
+      <h2><a href="http://apex.run/">APEX</a></h2>
+      <blockquote>Apex lets you build, deploy, and manage AWS Lambda functions with ease</blockquote>
+      <blockquote>use languages that are not natively supported by AWS Lambda, such as Golang, through the use of a
+        Node.js shim
+      </blockquote>
+      <blockquote>A variety of workflow related tooling is provided for testing functions, rolling back deploys, viewing
+        metrics, tailing logs ...
+      </blockquote>
+      <blockquote>Developed by @TJ in Go</blockquote>
+      <p><span style="color: red"> Does not manage API Gateway</span> - recommends <a href="https://www.terraform.io/">Terraform</a>,
+        an infrastructure automation tool</p>
+
+      <aside class="notes">
+        Quick summary on Apex
+      </aside>
+    </section>
+
+    <section data-background-image="assets/img/serverless-init.png" data-background-size="contain">
+      <aside class="notes">
+        Example of Serverless project initialisation
+      </aside>
+    </section>
+
+    <section data-background-image="assets/img/serverless-deploy.png" data-background-size="contain">
+      <aside class="notes">
+        Example of Serverless deployments
+      </aside>
+    </section>
+
+    <section>
+      <h2>Serverless Handler</h2>
+          <pre><code class="hljs javascript" data-noescape>
+            const getStory = require('./lib/getStory');
+
+            module.exports.handler = function(event, context, cb) {
+              return getStory(event.storyId)
+                .then(body => cb(null, body))
+                .catch(cb);
+            };
+          </code></pre>
+
+      <aside class="notes">
+        Example of Serverless handler
+      </aside>
+    </section>
+
+    <section>
+      <h2>Serverless Function Config</h2>
+          <pre><code class="hljs javascript" data-noescape>
+            {
+              "name": "story",
+              "runtime": "nodejs4.3",
+              "handler": "story/handler.handler",
+              "memorySize": 128,
+              "endpoints": [
+                {
+                  "path": "story/{id}",
+                  "method": "GET",
+                  "type": "AWS",
+                  "requestTemplates": {
+                    "application/json": {
+                      "storyId": "$input.params('id')"
+                    }
+                  },
+                  "responses": {
+                    "400": {
+                      "statusCode": "400"
+                    },
+                    "default": {
+                      "statusCode": "200",
+                      "responseParameters": {
+                        "method.response.header.Content-Type": "'text/html'"
+                      },
+                      "responseModels": {
+                        "text/html": "Empty"
+                      },
+                      "responseTemplates": {
+                        "text/html": "$input.path('$')"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          </code></pre>
+      <aside class="notes">
+        Example function configuration. Interesting points:
+        <ul>
+          <li>name</li>
+          <li>runtime</li>
+          <li>memorySize</li>
+          <li>requestTemplates.application/json.storyId - mapping parameters to event properties</li>
+          <li>responses - responseTemplates - example of returning HTML, not JSON or quoted string</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section>
+      <h2>Serverless +</h2>
+      <ul>
+        <li>Plugin Architecture</li>
+        <li>Popular - many examples and resources</li>
+        <li>Manages both Lambda Functions and API Gateway</li>
+        <li>Configuration maps to AWS terminology</li>
+        <li>
+          Flexible Project Structure
+          <ul>
+            <li>Monolithic</li>
+            <li>Micro-services</li>
+            <li>Nano-services</li>
+          </ul>
+        </li>
+      </ul>
+
+      <aside class="notes">
+        Serverless Pros
+      </aside>
+    </section>
+
+    <section>
+      <h2>Serverless -</h2>
+      <ul>
+        <li>Flaky Plugins</li>
+        <li>Function Deployment needs more automation</li>
+      </ul>
+
+      <aside class="notes">
+        <p>Serverless cons</p>
+        <p>Deployment doesn't package node_modules prior to deployment</p>
+      </aside>
+    </section>
+
+    <section>
+      <h2>Moar Serverless?</h2>
+      <ul>
+        <li><a href="https://blog.fugue.co/2016-05-05-architecting-a-serverless-web-application-in-aws.html">Architecting
+          a Serverless Web Application in AWS</a></li>
+        <li><a href="https://www.import.io/post/using-amazon-lambda-and-api-gateway/">Using AWS Lambda and API Gateway
+          to create a serverless schedule</a></li>
+        <li><a href="https://github.com/remicastaing/serverless-examples">serverless-examples</a></li>
+      </ul>
+
+      <aside class="notes">
+        serverless-examples - demo repo with various configs, scenarios and function structures.
+      </aside>
+    </section>
+
+    <section>
+      <h2>Apex Handler</h2>
+          <pre><code class="hljs javascript" data-noescape>
+            const getStory = require('./lib/getStory');
+
+            module.exports.handler = function(event, context, cb) {
+              return getStory(event.storyId)
+                .then(body => cb(null, body))
+                .catch(cb);
+            };
+          </code></pre>
+
+      <aside class="notes">
+        Anyone notice a difference between Apex and Serverless Handlers?
+      </aside>
+    </section>
+
+    <section>
+      <h2>Function Configuration</h2>
+          <pre><code class="hljs javascript" data-noescape>
+            {
+              "name": "bar",
+              "description": "Node.js example function",
+              "runtime": "nodejs",
+              "memory": 128,
+              "timeout": 5,
+              "role": "arn:aws:iam::293503197324:role/lambda"
+            }
+          </code></pre>
+
+      <aside class="notes">
+        <p>Function configuration is optional</p>
+        <p>Impacts folder structure - each function must have own package.json</p>
+      </aside>
+    </section>
+
+    <section>
+      <h2>Terraform Gateway Configuration</h2>
+          <pre><code class="hljs ruby" data-noescape>
+            variable "apex_function_story" {}
+
+            resource "aws_api_gateway_rest_api" "ApexAMPDemo" {
+              name = "Apex AMP Demo"
+              description = "Using Apex with Terraform for AMP demo"
+            }
+
+            resource "aws_api_gateway_resource" "StoryResource" {
+              rest_api_id = "${aws_api_gateway_rest_api.ApexAMPDemo.id}"
+              parent_id = "${aws_api_gateway_rest_api.ApexAMPDemo.root_resource_id}"
+              path_part = "story"
+            }
+
+            resource "aws_api_gateway_resource" "StoryID" {
+              rest_api_id = "${aws_api_gateway_rest_api.ApexAMPDemo.id}"
+              parent_id = "${aws_api_gateway_resource.StoryResource.id}"
+              path_part = "{id}"
+            }
+
+            resource "aws_api_gateway_method" "StoryGet" {
+              rest_api_id = "${aws_api_gateway_rest_api.ApexAMPDemo.id}"
+              resource_id = "${aws_api_gateway_resource.StoryID.id}"
+              http_method = "GET"
+              authorization = "NONE"
+            }
+
+            resource "aws_api_gateway_method_response" "200" {
+              rest_api_id = "${aws_api_gateway_rest_api.ApexAMPDemo.id}"
+              resource_id = "${aws_api_gateway_resource.StoryID.id}"
+              http_method = "${aws_api_gateway_method.StoryGet.http_method}"
+              status_code = "200"
+
+              response_parameters_in_json = "{\"method.response.header.Content-Type\": true}"
+
+              response_models = {
+                "text/html" = "Empty"
+              }
+            }
+
+            resource "aws_api_gateway_method_response" "400" {
+              rest_api_id = "${aws_api_gateway_rest_api.ApexAMPDemo.id}"
+              resource_id = "${aws_api_gateway_resource.StoryID.id}"
+              http_method = "${aws_api_gateway_method.StoryGet.http_method}"
+              status_code = "400"
+            }
+
+            resource "aws_api_gateway_integration_response" "Story" {
+              rest_api_id = "${aws_api_gateway_rest_api.ApexAMPDemo.id}"
+              resource_id = "${aws_api_gateway_resource.StoryID.id}"
+              http_method = "${aws_api_gateway_method.StoryGet.http_method}"
+              status_code = "${aws_api_gateway_method_response.200.status_code}"
+
+              response_parameters_in_json = "{\"method.response.header.Content-Type\": \"'text/html'\"}"
+
+              response_templates = {
+                "text/html" = "$input.path('$')"
+              }
+            }
+
+            resource "aws_api_gateway_integration_response" "Story400" {
+              rest_api_id = "${aws_api_gateway_rest_api.ApexAMPDemo.id}"
+              resource_id = "${aws_api_gateway_resource.StoryID.id}"
+              http_method = "${aws_api_gateway_method.StoryGet.http_method}"
+              status_code = "${aws_api_gateway_method_response.400.status_code}"
+              selection_pattern = "400"
+            }
+
+            resource "aws_api_gateway_integration" "StoryGet" {
+              rest_api_id = "${aws_api_gateway_rest_api.ApexAMPDemo.id}"
+              resource_id = "${aws_api_gateway_resource.StoryID.id}"
+              http_method = "${aws_api_gateway_method.StoryGet.http_method}"
+              type = "AWS"
+              integration_http_method = "POST" # Must be POST for invoking Lambda function
+              credentials = "${aws_iam_role.gateway_invoke_lambda.arn}"
+              # http://docs.aws.amazon.com/apigateway/api-reference/resource/integration/#uri
+              uri = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/${var.apex_function_story}/invocations"
+              request_templates = {
+                "application/json" = "{\"pathId\":\"$input.params('id')\"}"
+              }
+            }
+
+            resource "aws_api_gateway_deployment" "dev" {
+              depends_on = ["aws_api_gateway_integration.StoryGet"]
+
+              rest_api_id = "${aws_api_gateway_rest_api.ApexAMPDemo.id}"
+              stage_name = "dev"
+            }
+          </code></pre>
+
+      <aside class="notes">
+        <p>I had difficulty matching terraform configs with AWS Documents</p>
+      </aside>
+    </section>
+
+    <section>
+      <h2>Apex +</h2>
+      <ul>
+        <li>Less Opinionated</li>
+        <li>Focuses on Lambda Functions only</li>
+      </ul>
+
+      <aside class="notes">Pros</aside>
+    </section>
+
+    <section>
+      <h2>Apex -</h2>
+      <ul>
+        <li>Less Opinionated</li>
+        <li>Less popular</li>
+        <li>less resources on the Internet</li>
+        <li>
+          - Terraform
+          <ul>
+            <li>AWS Gateway API - via plugin</li>
+            <li>Unclear - Almost no documentation</li>
+            <li>Maps poorly to AWS Terminology</li>
+            <li>Flaky</li>
+          </ul>
+        </li>
+      </ul>
+
+      <aside class="notes">
+        <p>Cons - couldn't get it to work</p>
+        <p>Wouldn't have had a clue on how to setup a gateway if I hadn't first used Serverless</p>
+      </aside>
+    </section>
+
+    <section>
+      <h2>Moar Apex?</h2>
+      <ul>
+        <li><a href="https://medium.com/apex-serverless/introducing-apex-800824ffaa70#.cszkitras">Introducing Apex</a>
+          by TJ
+        </li>
+        <li><a href="https://github.com/apex/apex/tree/35063c0201d83cd711b1d746edf409a00db2d469/_examples/api-gateway">Terraform
+          + Apex Example</a></li>
+        <li><a href="https://www.terraform.io/docs/providers/aws/r/api_gateway_rest_api.html">Terraform API Gateway
+          Docs</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Conclusion</h2>
+      <ul>
+        <li>Serverless requirements are coming - starting for small/trivial tasks. Expect these to grow in scope</li>
+        <li>Expect to see more Frameworks</li>
+        <li>Expect clients to start enquiring and wanting them</li>
+        <li>DevOps to expect more support</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Would I build an entire API backend in serverless?</h2>
+      <p class="fragment">Ask me in a year</p>
+    </section>
+
+
+  </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+
+  // Full list of configuration options available at:
+  // https://github.com/hakimel/reveal.js#configuration
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+
+    transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+    // Optional reveal.js plugins
+    dependencies: [
+      {src: 'lib/js/classList.js', condition: function() { return !document.body.classList; }},
+      {src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector('[data-markdown]'); }},
+      {
+        src: 'plugin/markdown/markdown.js',
+        condition: function() { return !!document.querySelector('[data-markdown]'); }
+      },
+      {src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); }},
+      {src: 'plugin/zoom-js/zoom.js', async: true},
+      {src: 'plugin/notes/notes.js', async: true}
+    ]
+  });
+
+</script>
+
+<script src="//192.168.40.11:35729/livereload.js?snipver=1" async="" defer=""></script>
+
+</body>
+</html>
