@@ -77,22 +77,51 @@
         A Lambda function consists of code you provide, associated dependencies, and configuration.
       </blockquote>
 
-      <blockquote class="fragment">
-        A Lambda function cannot direct depend on another Lambda Function - i.e. share code.
+      <blockquote class="fragment" style="color: red">
+        A Lambda function cannot directly depend on another Lambda Function - i.e. share code.
       </blockquote>
 
       <aside class="notes">
         <ul>
           <li>what are lambda functions?</li>
           <li>choice quotes from Amazon</li>
+          <li>
+            In a nutshell, a Lambda function is a self contained executable that lives in the cloud,
+            can consume and return data, has several trigger mechanisms: i.e. url, cron, etc and is spun up
+            only when required.
+          </li>
+          <li>highlighted code sharing - more on this later</li>
         </ul>
       </aside>
     </section>
 
     <section data-background-image="assets/img/overview.jpg" data-background-size="contain">
+      <aside class="notes">
+        <ul>
+          <li>AWS Lambda Function is a cog in a bigger machine</li>
+          <li>
+            Interacts with other Amazon services
+            <ul>
+              <li>API Gateway - exposes Lambda functions vial URLs</li>
+              <li>Amazon Cloudwatch - logging and monitoring</li>
+              <li>SNS</li>
+              <li>SQS</li>
+              <li>Redshift</li>
+              <li>...</li>
+            </ul>
+          </li>
+        </ul>
+      </aside>
     </section>
 
     <section>
+      <h2>Focus on</h2>
+      <h3>Lambda Functions</h3>
+      <h3>API Gateway</h3>
+    </section>
+
+    <section>
+      <h2>Lambda Functions</h2>
       <h3><a href="http://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html">Supported Runtimes</a>
       </h3>
       <ul>
@@ -120,10 +149,19 @@
     <section>
       <h2><a href="https://aws.amazon.com/lambda/pricing/">Pricing</a></h2>
       <ul>
+        <li>Available in free tier</li>
         <li>First 1 million requests per month are free</li>
         <li>$0.20 per 1 million requests thereafter ($0.0000002 per request)</li>
         <li>Dependant on per Lambda Function memory allocation</li>
       </ul>
+
+      <aside class="notes">
+        <ul>
+          <li>Follow the Pricing title link for details</li>
+          <li>The remainder of the presentation will focus on using node with Lambda Functions</li>
+          <li>AWS provides examples and documentation for using Python and Java</li>
+        </ul>
+      </aside>
     </section>
 
     <section>
@@ -138,12 +176,24 @@
               // callback("some error type");
             }
           </code></pre>
+
+      <aside class="notes">
+        <ul>
+          <li>A Lambda function consists of a single handler</li>
+          <li>event - user supplied data</li>
+          <li>context - executable env, region etc</li>
+          <li>success and data / failure is reported via callback - basic node callbacks</li>
+        </ul>
+      </aside>
     </section>
 
     <section>
       <h2>Managing &amp; Creating Lambda Functions</h2>
       <aside class="notes">
-        Manaing Lambda function using the AWS Console
+        <ul>
+          <li>lambda functions can be managed via AWS Web Console or via an API</li>
+          <li>First - Managing Lambda function using the AWS Console</li>
+        </ul>
       </aside>
     </section>
 
@@ -155,7 +205,12 @@
 
     <section data-background-image="assets/img/lambda-create-2.png" data-background-size="contain">
       <aside class="notes">
-        Example scafold node function
+        <ul>
+          <li>Example micro-service scaffold function</li>
+          <li>Write your own if all logic is contained in a single function</li>
+          <li>It is recommended that handler be small and should delegate code to smaller
+            functions, which can be tested individually</li>
+        </ul>
       </aside>
     </section>
 
@@ -166,15 +221,31 @@
     </section>
 
     <section>
-      <h2>Managing &amp; Creating Gateways</h2>
+      <h2>API Gateway</h2>
+      <h3>Managing &amp; Creating</h3>
+
+      <aside class="notes">
+        <ul>
+          <li>Gateway links URLs to lambda functions</li>
+          <li>Can be managed using the AWS Web Console or by an API</li>
+        </ul>
+      </aside>
     </section>
 
     <section data-background-image="assets/img/gateway-list.png" data-background-size="contain">
+      <aside class="notes">
+        <ul>
+          <li>List view</li>
+          <li>Think of each gateway as a project, with own endpoints</li>
+        </ul>
+      </aside>
     </section>
 
     <section data-background-image="assets/img/gateway-create.png" data-background-size="contain">
       <aside class="notes">
-        API Gateway endpoints can also be defined using Swagger
+        <ul>
+          <li>Can use Swagger to define endpoints</li>
+        </ul>
       </aside>
     </section>
 
@@ -186,8 +257,14 @@
 
     <section data-background-image="assets/img/gateway-detail.png" data-background-size="contain">
       <aside class="notes">
-        <p>Example GET endpoint with Request, request/response integration and response</p>
-        <p>header, parameters/query strings need to be configured as do response types</p>
+        <ul>
+          <li>An example of a single GET endpoint</li>
+          <li>this is where it gets interesting and complicated</li>
+          <li>Note the four components: Request Method and integration plus response</li>
+          <li>Method Request - must define path parameters and query strings </li>
+          <li>Integration Request - type of integration: i.e. lambda, http proxy</li>
+          <li>Integration Response - define response headers (i.e. Content-Type) and body - defaults to JSON needs extra work to return HTML and strip quotes</li>
+        </ul>
       </aside>
     </section>
 
@@ -198,6 +275,16 @@
         <li class="fragment">Not repeatable</li>
         <li class="fragment">Not revisionable</li>
       </ul>
+
+      <aside class="notes">
+        <ul>
+          <li>Using Web Console is fine for one off functions and endpoints</li>
+          <li>Gets complicated fast</li>
+          <li>Managing large number of functions/endpoints using the web console is dangerous</li>
+          <li>configuration as code</li>
+          <li>API + Frameworks</li>
+        </ul>
+      </aside>
     </section>
 
     <section>
@@ -211,7 +298,10 @@
       </ul>
 
       <aside class="notes">
-        <p>Concentrating on two main frameworks.</p>
+        <ul>
+          <li>Concentrating on two frameworks.</li>
+          <li>click on others for more frameworks</li>
+        </ul>
       </aside>
     </section>
 
@@ -233,25 +323,13 @@
       </blockquote>
 
       <aside class="notes">
-        Quick summary on Serverless
-      </aside>
-    </section>
-
-    <section>
-      <h2><a href="http://apex.run/">APEX</a></h2>
-      <blockquote>Apex lets you build, deploy, and manage AWS Lambda functions with ease</blockquote>
-      <blockquote>use languages that are not natively supported by AWS Lambda, such as Golang, through the use of a
-        Node.js shim
-      </blockquote>
-      <blockquote>A variety of workflow related tooling is provided for testing functions, rolling back deploys, viewing
-        metrics, tailing logs ...
-      </blockquote>
-      <blockquote>Developed by @TJ in Go</blockquote>
-      <p><span style="color: red"> Does not manage API Gateway</span> - recommends <a href="https://www.terraform.io/">Terraform</a>,
-        an infrastructure automation tool</p>
-
-      <aside class="notes">
-        Quick summary on Apex
+        <ul>
+          <li>Choice excerpts from serverless website</li>
+          <li>node application</li>
+          <li>javascript centric but more runtimes are planned</li>
+          <li>Manages both Lambda Functions and API Gateways</li>
+          <li>vc backed</li>
+        </ul>
       </aside>
     </section>
 
@@ -382,6 +460,30 @@
 
       <aside class="notes">
         serverless-examples - demo repo with various configs, scenarios and function structures.
+      </aside>
+    </section>
+
+    <section>
+      <h2><a href="http://apex.run/">APEX</a></h2>
+      <blockquote>Apex lets you build, deploy, and manage AWS Lambda functions with ease</blockquote>
+      <blockquote>use languages that are not natively supported by AWS Lambda, such as Golang, through the use of a
+        Node.js shim
+      </blockquote>
+      <blockquote>A variety of workflow related tooling is provided for testing functions, rolling back deploys, viewing
+        metrics, tailing logs ...
+      </blockquote>
+      <blockquote>Developed by @TJ in Go</blockquote>
+      <p><span style="color: red"> Does not manage API Gateway</span> - recommends <a href="https://www.terraform.io/">Terraform</a>,
+        an infrastructure automation tool</p>
+
+      <aside class="notes">
+        <ul>
+          <li>Choice excerpts</li>
+          <li>GO application</li>
+          <li>supports node, python, java PLUS goland and more</li>
+          <li>Creates a javascript handler stub for unsupported runtimes</li>
+          <li>developed by @TJ</li>
+        </ul>
       </aside>
     </section>
 
@@ -575,8 +677,12 @@
     </section>
 
     <section>
-      <h2>Would I build an entire API backend in serverless?</h2>
-      <p class="fragment">Ask me in a year</p>
+      <h2>Would I build an entire serverless API backend?</h2>
+      <p class="fragment">Ask me in a year!</p>
+    </section>
+
+    <section>
+      <h2>Questions?</h2>
     </section>
 
 
